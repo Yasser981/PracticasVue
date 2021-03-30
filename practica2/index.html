@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <title>Tercero</title>
+</head>
+<body>
+    <div id="app">
+        <h1>{{titulo}}</h1>
+        <ul>
+            <li v-for="fruta in frutas">
+                <input type="number" v-model.number = "fruta.cantidad">
+                <button @click="fruta.cantidad++">+</button>
+                <button @click="fruta.cantidad--">--</button>
+                <span v-if="fruta.cantidad === 0">- sin Stock</span>
+            </li> 
+        </ul>
+        <h4>Total : {{sumarfrutas}}</h4>
+        <input type="text" v-model="nuevafruta" @keyup.enter="agregarFruta">
+        <button class="button" v-on:click = "agregarFruta">Agregar</button>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>

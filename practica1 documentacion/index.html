@@ -1,0 +1,128 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Yasser</title>
+</head>
+<body>
+    <div id="app">
+        {{ message }}
+    </div>
+
+    <div id="app-2">
+        <span v-bind:title="message">
+          Mueva el mouse sobre mí durante unos segundos
+          para ver mi título enlazado dinámicamente.
+        </span>
+      </div>
+      <br/>
+      <div id="app-3">
+        <span v-if="cosa">Ahora me ves</span>
+      </div>
+      <br/>
+      <div id="app-4">
+        <h1>App 4</h1>
+        <ol>
+          <li v-for="i in todos">
+            {{ i.textt }}
+          </li>
+        </ol>
+      </div>
+
+      <br/>
+
+      <div id="app-5">
+          <p>{{message}}</p>
+          <button v-on:click = "reverseMessage">Mensage invertido</button>
+      </div>
+      <br/>
+      <div id="app-6">
+          <p>{{message}}</p>
+          <input v-model = "message">
+      </div>
+      <br/>
+      <div id="app-7">
+        <ol>
+          <!--
+            Ahora proporcionamos a cada todo-item con el objeto todo
+            que representa, para que su contenido pueda ser dinámico.
+            También necesitamos proporcionar a cada componente con una "clave",
+            que vamos a explicar más adelante.
+          -->
+          <todo-item
+            v-for="item in groceryList"
+            v-bind:todo="item"
+            v-bind:key="item.id">
+          </todo-item>
+        </ol>
+      </div>
+      <div id="example">
+        <p>Mensaje Original: "{{message}}"</p>
+        <p>Mensaje invertido computado: "{{reverseMessage}}"</p>
+      </div>
+      <br/>
+      <div id="demo">{{fullname}}</div>
+      <div id="demo2">{{fullname}}</div>
+      <div id="watch-example">
+        <p>
+          Haz una pregunta de si/no
+          <input v-model="question">
+        </p>
+        <p>{{answer}}</p>
+      </div>
+      <br/>
+      <div id="cosa" v-bind:class="classObject"></div>
+    <script src="index.js"></script>
+    <!-- Dado que ya existe un rico ecosistema de bibliotecas ajax         -->
+<!-- y colecciones de métodos de utilidad de uso general, Vue core     -->
+<!-- es capaz de permanecer pequeño al no reinventarlos. Esto también  -->
+<!-- te da la libertad de usar aquello con lo que estás familiarizado. -->
+<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+<script>
+var watchExampleVM = new Vue({
+  el: '#watch-example',
+  data: {
+    question: '',
+    answer: 'No puedo darte una respuesta hasta que hagas una pregunta!'
+  },
+  watch: {
+    // cada vez que la pregunta cambie, esta función será ejecutada
+    question: function (newQuestion, oldQuestion) {
+      this.answer = 'Esperando que deje de escribir...'
+      this.debouncedGetAnswer()
+    }
+  },
+  created: function () {
+    // _.debounce es una función proporcionada por lodash para limitar cuan
+    // a menudo se puede ejecutar una operación particularmente costosa.
+    // En este caso, queremos limitar la frecuencia con la que accedemos a
+    // yesno.wtf/api, esperando hasta que el usuario haya terminado
+    // de escribir antes de realizar la solicitud ajax.
+    // Para aprender más sobre la función _.debounce (y su primo
+    // _.throttle), visite: https://lodash.com/docs#debounce
+    this.debouncedGetAnswer = _.debounce(this.getAnswer, 500)
+  },
+  methods: {
+    getAnswer:  function () {
+      if (this.question.indexOf('?') === -1) {
+        this.answer = 'Las preguntas suelen contener un signo de interrogación. ;-)'
+        return
+      }
+      this.answer = 'Pensando...'
+      var vm = this
+      axios.get('https://yesno.wtf/api')
+        .then(function (response) {
+          vm.answer = _.capitalize(response.data.answer)
+        })
+        .catch(function (error) {
+          vm.answer = '¡Error! No se pudo alcanzar la API. ' + error
+        })
+    }
+  }
+})
+</script>
+</body>
+</html>
