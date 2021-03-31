@@ -16,8 +16,29 @@ const app = new Vue({
          //se ejecuta antes de inserta el dom
          console.log('beforeMount');
      },
-     mouted(){
+     mounted(){
          //Se ejecuta al insertar el Dom
-         console.log('mounted')
+         console.log('mounted');
+     },
+     beforeUpdate(){
+         //Al detectar un cambio
+         console.log('beforeUpdate');
+     },
+     updated(){
+         //Al realizar los Cambios
+         console.log('update');
+     },
+     beforeDestroy(){
+         //Antes de destruir la instancia
+         console.log('beforeDestroy');
+     },
+     destroyed(){
+         //Se destruyen toda la instancia
+         console.log('destroyed');
+     },
+     methods:{
+        destruir:function(){
+            this.$destroy();
+        }
      }
 })
